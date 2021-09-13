@@ -1,7 +1,17 @@
 <template>
   <div>
     <div class="card m-1">
-      <div class="card-header">Rede</div>
+      <div class="card-header">
+        <div class="d-flex flex-row justify-content-between flex-wrap">
+          Rede
+          <button
+            @click="loadData()"
+            class="btn btn-outline-secondary btn-sm m-0 p-0"
+          >
+            <img src="@/assets/arrow-clockwise.svg" width="20" />
+          </button>
+        </div>
+      </div>
       <div class="card-body">
         <div>
           <div class="d-flex flex-row justify-content-around flex-wrap">
@@ -29,12 +39,23 @@
               <strong>Status Wifi: </strong>
               <small>{{ stsWifi[wifi.status] }}</small>
             </p>
-            <button class="btn ml-auto p-2" @click="modalApi = true">API</button>
-            <button class="btn ml-auto p-2" @click="modalCfg = true">
+            <button
+              class="btn btn-outline-secondary ml-auto p-2"
+              @click="modalApi = true"
+            >
+              API
+            </button>
+            <button
+              class="btn btn-outline-secondary ml-auto p-2"
+              @click="modalCfg = true"
+            >
               Cfg
             </button>
-            <button class="btn ml-auto p-2" @click="modalWifi = true">
-              <img src="../src/assets/wifi.png" width="20" /> Selecionar
+            <button
+              class="btn btn-outline-secondary ml-auto p-2"
+              @click="modalWifi = true"
+            >
+              <img src="../src/assets/wifi.svg" width="20" /> Selecionar
             </button>
           </div>
         </div>
@@ -49,18 +70,44 @@
               class="card-header"
               :class="g1 == 1 ? config.o1.cardOnClass : config.o1.cardOffClass"
             >
-              {{ config.o1.cardText }} - {{g1 == 1 ? config.o1.cardOnText : config.o1.cardOffText }}
+              <div class="d-flex flex-row justify-content-between flex-wrap">
+                {{ config.o1.cardText }} -
+                {{ g1 == 1 ? config.o1.cardOnText : config.o1.cardOffText }}
+                <button
+                  @click="config.o1.enableSound = !config.o1.enableSound"
+                  class="btn btn-link btn-sm mx-1 p-0"
+                >
+                  <img
+                    v-if="config.o1.enableSound"
+                    src="@/assets/volume-up.svg"
+                    width="20"
+                  />
+                  <img v-else src="@/assets/volume-mute.svg" width="20" />
+                </button>
+                <button @click="loadData()" class="btn btn-link btn-sm m-0 p-0">
+                  <img src="@/assets/clock.svg" width="20" />
+                </button>
+              </div>
             </div>
             <div class="card-body">
               <div>
                 <div class="d-flex flex-row justify-content-around flex-wrap">
-                  <button :class="config.o1.btnOnClass" @click="sGpio1('1')">
+                  <button
+                    :class="config.o1.btnOnClass"
+                    @click="setOutput(1, '1')"
+                  >
                     {{ config.o1.btnOnText }}
                   </button>
-                  <button :class="config.o1.btnOffClass" @click="sGpio1('0')">
+                  <button
+                    :class="config.o1.btnOffClass"
+                    @click="setOutput(1, '0')"
+                  >
                     {{ config.o1.btnOffText }}
                   </button>
-                  <button :class="config.o1.btnTglClass" @click="sGpio1('t')">
+                  <button
+                    :class="config.o1.btnTglClass"
+                    @click="setOutput(1, 't')"
+                  >
                     {{ config.o1.btnTglText }}
                   </button>
                 </div>
@@ -72,18 +119,44 @@
               class="card-header"
               :class="g2 == 1 ? config.o2.cardOnClass : config.o2.cardOffClass"
             >
-              {{ config.o2.cardText }} - {{g2 == 1 ? config.o2.cardOnText : config.o2.cardOffText }}
+              <div class="d-flex flex-row justify-content-between flex-wrap">
+                {{ config.o2.cardText }} -
+                {{ g2 == 1 ? config.o2.cardOnText : config.o2.cardOffText }}
+                <button
+                  @click="config.o2.enableSound = !config.o2.enableSound"
+                  class="btn btn-link btn-sm mx-1 p-0"
+                >
+                  <img
+                    v-if="config.o2.enableSound"
+                    src="@/assets/volume-up.svg"
+                    width="20"
+                  />
+                  <img v-else src="@/assets/volume-mute.svg" width="20" />
+                </button>
+                <button @click="loadData()" class="btn btn-link btn-sm m-0 p-0">
+                  <img src="@/assets/clock.svg" width="20" />
+                </button>
+              </div>
             </div>
             <div class="card-body">
               <div>
                 <div class="d-flex flex-row justify-content-around flex-wrap">
-                  <button :class="config.o2.btnOnClass" @click="sGpio2('1')">
+                  <button
+                    :class="config.o2.btnOnClass"
+                    @click="setOutput(2, '1')"
+                  >
                     {{ config.o2.btnOnText }}
                   </button>
-                  <button :class="config.o2.btnOffClass" @click="sGpio2('0')">
+                  <button
+                    :class="config.o2.btnOffClass"
+                    @click="setOutput(2, '0')"
+                  >
                     {{ config.o2.btnOffText }}
                   </button>
-                  <button :class="config.o2.btnTglClass" @click="sGpio2('t')">
+                  <button
+                    :class="config.o2.btnTglClass"
+                    @click="setOutput(2, 't')"
+                  >
                     {{ config.o2.btnTglText }}
                   </button>
                 </div>
@@ -99,18 +172,62 @@
         <div class="card-body">
           <div>
             <div class="d-flex flex-row justify-content-around">
-              <button
-                class="btn btn-lg"
-                :class="i1 == 0 ? config.i1.onClass : config.i1.offClass"
-              >
-                {{ i1 == 0 ? config.i1.onText : config.i1.offText }}
-              </button>
-              <button
-                class="btn btn-lg"
-                :class="i2 == 0 ? config.i2.onClass : config.i2.offClass"
-              >
-                {{ i2 == 0 ? config.i2.onText : config.i2.offText }}
-              </button>
+              <div class="card m-1">
+                <div class="card-header">
+                  <div
+                    class="d-flex flex-row justify-content-between flex-wrap"
+                  >
+                    Entrada 1
+                    <button
+                      @click="config.i1.enableSound = !config.i1.enableSound"
+                      class="btn btn-link btn-sm mx-1 p-0"
+                    >
+                      <img
+                        v-if="config.i1.enableSound"
+                        src="@/assets/volume-up.svg"
+                        width="20"
+                      />
+                      <img v-else src="@/assets/volume-mute.svg" width="20" />
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <button
+                    class="btn btn-lg"
+                    :class="i1 == 0 ? config.i1.onClass : config.i1.offClass"
+                  >
+                    {{ i1 == 0 ? config.i1.onText : config.i1.offText }}
+                  </button>
+                </div>
+              </div>
+              <div class="card m-1">
+                <div class="card-header">
+                  <div
+                    class="d-flex flex-row justify-content-between flex-wrap"
+                  >
+                    Entrada 2
+                    <button
+                      @click="config.i2.enableSound = !config.i2.enableSound"
+                      class="btn btn-link btn-sm mx-1 p-0"
+                    >
+                      <img
+                        v-if="config.i2.enableSound"
+                        src="@/assets/volume-up.svg"
+                        width="20"
+                      />
+                      <img v-else src="@/assets/volume-mute.svg" width="20" />
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <button
+                    class="btn btn-lg"
+                    :class="i2 == 0 ? config.i2.onClass : config.i2.offClass"
+                  >
+                    {{ i2 == 0 ? config.i2.onText : config.i2.offText }}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -124,6 +241,28 @@
       v-model="config"
       @save="saveCFG"
     />
+    <!-- <ModalSound
+      v-if="modalSound1"
+      title="Entrada 1"
+      @close="modalSound1 = false"
+      @save="saveSound"
+    />
+    <ModalSound
+      v-if="modalSound2"
+      title="Entrada 2"
+      @close="modalSound2 = false"
+      @save="saveSound"
+    /> -->
+
+    <div
+      class="position-fixed bottom-0 right-0 p-3"
+      style="z-index: 5; right: 0; bottom: 0"
+    >
+    <div >
+      <Toast v-model="ttt[0]"  />
+
+    </div>
+    </div>
   </div>
 </template>
 
@@ -131,6 +270,8 @@
 import Modal from "./components/modal.vue";
 import ModalAPI from "./components/modalAPI.vue";
 import ModalCFG from "./components/modalCfg.vue";
+// import ModalSound from "./components/modalSound.vue";
+import Toast from './components/toast.vue'
 import "./assets/bootstrap.min.css";
 let sseClient;
 export default {
@@ -139,15 +280,21 @@ export default {
     Modal,
     ModalAPI,
     ModalCFG,
+    // ModalSound,
+    Toast,
   },
   data: () => ({
     modalWifi: false,
     modalApi: false,
     modalCfg: false,
+    modalSound1: false,
+    modalSound2: false,
+    hideInToast: true,
     g1: 0,
     g2: 0,
     i1: 0,
     i2: 0,
+    ttt :[{hideInToast: false, title: "Aham", body: "corpo"},],
     wifi: {},
     stsWifi: [
       "Idle",
@@ -162,8 +309,8 @@ export default {
       o1: {
         enabled: true,
         cardText: "Saida 1",
-        cardOnText: 'Ligada',
-        cardOffText: 'Desligada',
+        cardOnText: "Ligada",
+        cardOffText: "Desligada",
         cardOnClass: "bg-success text-white",
         cardOffClass: "bg-danger text-white",
         btnOnClass: "btn btn-lg btn-success mx-4 my-1",
@@ -172,12 +319,15 @@ export default {
         btnOffText: "Desliga",
         btnTglClass: "btn btn-lg btn-warning mx-4 my-1",
         btnTglText: "Inverter",
+        enableSound: true,
+        onSound: "",
+        offSound: "",
       },
       o2: {
         enabled: true,
         cardText: "Saida 2",
-        cardOnText: 'Ligada',
-        cardOffText: 'Desligada',
+        cardOnText: "Ligada",
+        cardOffText: "Desligada",
         cardOnClass: "bg-success text-white",
         cardOffClass: "bg-danger text-white",
         btnOnClass: "btn btn-lg btn-success mx-4 my-1",
@@ -186,6 +336,9 @@ export default {
         btnOffText: "Desliga",
         btnTglClass: "btn btn-lg btn-warning mx-4 my-1",
         btnTglText: "Inverter",
+        enableSound: true,
+        onSound: "",
+        offSound: "",
       },
       i1: {
         enabled: true,
@@ -193,6 +346,9 @@ export default {
         onClass: "bg-success text-white",
         offText: "Desligado",
         offClass: "bg-danger text-white",
+        enableSound: true,
+        onSound: "",
+        offSound: "",
       },
       i2: {
         enabled: true,
@@ -200,24 +356,19 @@ export default {
         onClass: "bg-success text-white",
         offText: "Desligado",
         offClass: "bg-danger text-white",
+        enableSound: true,
+        onSound: "",
+        offSound: "",
       },
     },
   }),
   methods: {
-    sGpio1(value) {
+    setOutput(out, value, timeout) {
       let formData = new FormData();
-      formData.append("gpio1", value);
-      this.$http
-        .post(`/gpio`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        })
-        .then(() => {});
-    },
-    sGpio2(value) {
-      let formData = new FormData();
-      formData.append("gpio2", value);
+      formData.append(`gpio${out}`, value);
+      if (timeout) {
+        formData.append(`timeout`, timeout);
+      }
       this.$http
         .post(`/gpio`, formData, {
           headers: {
@@ -255,6 +406,7 @@ export default {
     input(value) {
       let data = JSON.parse(value.data);
       if (data.in1 != null) {
+        this.showToast();
         this.i1 = data.in1;
       }
       if (data.in2 != null) {
@@ -264,30 +416,42 @@ export default {
     wifiATT() {
       this.loadWifi();
     },
+    showToast() {
+      this.hideInToast = false;
+      setTimeout(() => {
+        this.hideInToast = true;
+      }, 5000);
+    },
     loadCfg() {
       let cfg = localStorage.getItem("cfgESP");
       if (cfg) {
         this.config = JSON.parse(cfg);
-      } 
+      }
     },
     saveCFG() {
       localStorage.setItem("cfgESP", JSON.stringify(this.config));
+      console.log(JSON.stringify(this.config).length);
+    },
+    saveSound(event) {
+      console.log(event);
+    },
+    loadData() {
+      console.log("loadData");
+      this.loadGpio();
+      this.loadInput();
+      this.loadWifi();
+      this.loadCfg();
     },
   },
   mounted() {
-    // sseClient = new EventSource("http://192.168.88.33/events");
-    sseClient = new EventSource("/events");
+    sseClient = new EventSource("http://10.10.10.145/events");
+    // sseClient = new EventSource("/events");
     sseClient.onopen = function () {};
     sseClient.onerror = function () {};
     sseClient.addEventListener("output", this.output, false);
     sseClient.addEventListener("input", this.input, false);
     sseClient.addEventListener("wifi", this.wifiATT, false);
-
-    this.loadGpio();
-    this.loadInput();
-    this.loadWifi();
-    this.loadCfg();
-
+    this.loadData();
     document.title = "ESP01 IO";
   },
 };

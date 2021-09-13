@@ -63,29 +63,29 @@
                   </div>
                 </div>
                 <div class="row">
-                    <div class="col">
-                      <div class="form-group">
-                        <label for="cardOnText1">Texto Ligado</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="cardOnText1"
-                          v-model="value.o1.cardOnText"
-                        />
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="form-group">
-                        <label for="cardOffText1">Texto Desligado</label>
-                        <input
-                          type="text"
-                          class="form-control"
-                          id="cardOffText1"
-                          v-model="value.o1.cardOffText"
-                        />
-                      </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="cardOnText1">Texto Ligado</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="cardOnText1"
+                        v-model="value.o1.cardOnText"
+                      />
                     </div>
                   </div>
+                  <div class="col">
+                    <div class="form-group">
+                      <label for="cardOffText1">Texto Desligado</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="cardOffText1"
+                        v-model="value.o1.cardOffText"
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div class="row">
                   <div class="col">
                     <div class="form-group">
@@ -154,8 +154,46 @@
                         v-model="value.o1.btnTglClass"
                       />
                     </div>
-                  </div>
+                  </div>                  
                 </div>
+                <div class="row">
+                    <div class="col">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="defaultCheck1"
+                          v-model="value.o1.enableSound"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Som Ativado
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <label for="cardText1">Som Ligado</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="cardText1"
+                        placeholder="Url do audio"
+                        v-model="value.o1.onSound"
+                      />
+                    </div>
+                    <div class="col">
+                      <label for="cardText1">Som Desligado</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="cardText1"
+                        placeholder="Url do audio"
+                        v-model="value.o1.offSound"
+                      />
+                    </div>
+                  </div>
               </div>
               <div class="card">
                 <div class="card-header">Saida 2</div>
@@ -271,7 +309,9 @@
                     </div>
                     <div class="col">
                       <div class="form-group">
-                        <label for="btnOffClass2">Classe do Botão Desliga</label>
+                        <label for="btnOffClass2"
+                          >Classe do Botão Desliga</label
+                        >
                         <input
                           type="text"
                           class="form-control"
@@ -292,6 +332,44 @@
                           v-model="value.o2.btnTglClass"
                         />
                       </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="defaultCheck1"
+                          v-model="value.o2.enableSound"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Som Ativado
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <label for="cardText1">Som Ligado</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="cardText1"
+                        placeholder="Url do audio"
+                        v-model="value.o2.onSound"
+                      />
+                    </div>
+                    <div class="col">
+                      <label for="cardText1">Som Desligado</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="cardText1"
+                        placeholder="Url do audio"
+                        v-model="value.o2.offSound"
+                      />
                     </div>
                   </div>
                 </div>
@@ -347,6 +425,44 @@
                       </div>
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="defaultCheck1"
+                          v-model="value.i1.enableSound"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Som Ativado
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <label for="cardText1">Som Ligado</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="cardText1"
+                        placeholder="Url do audio"
+                        v-model="value.i1.onSound"
+                      />
+                    </div>
+                    <div class="col">
+                      <label for="cardText1">Som Desligado</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="cardText1"
+                        placeholder="Url do audio"
+                        v-model="value.i1.offSound"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="card">
@@ -400,6 +516,44 @@
                       </div>
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="col">
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="defaultCheck1"
+                          v-model="value.i2.enableSound"
+                        />
+                        <label class="form-check-label" for="defaultCheck1">
+                          Som Ativado
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <label for="cardText1">Som Ligado</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="cardText1"
+                        placeholder="Url do audio"
+                        v-model="value.i2.onSound"
+                      />
+                    </div>
+                    <div class="col">
+                      <label for="cardText1">Som Desligado</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="cardText1"
+                        placeholder="Url do audio"
+                        v-model="value.i2.offSound"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -448,8 +602,8 @@ export default {
       this.$emit("close");
     },
     limpar() {
-      localStorage.removeItem('cfgESP');
-      alert('clique em atualizar para voltar ao padrão')
+      localStorage.removeItem("cfgESP");
+      alert("clique em atualizar para voltar ao padrão");
       this.$emit("close");
     },
   },
