@@ -255,19 +255,19 @@
 </template>
 
 <script>
-import Modal from "./components/modal.vue";
-import ModalAPI from "./components/modalAPI.vue";
-import ModalCFG from "./components/modalCfg.vue";
-import Toast from "./components/toast.vue";
+// import Modal from "./components/modal.vue";
+// import ModalAPI from "./components/modalAPI.vue";
+// import ModalCFG from "./components/modalCfg.vue";
+// import Toast from "./components/toast.vue";
 import "./assets/bootstrap.min.css";
 let sseClient;
 export default {
   name: "App",
   components: {
-    Modal,
-    ModalAPI,
-    ModalCFG,
-    Toast,
+    Modal : () => import ("./components/modal.vue"),
+    ModalAPI: () => import ("./components/modalAPI.vue"),
+    ModalCFG: () => import ("./components/modalCfg.vue"),
+    Toast: () => import ("./components/toast.vue"),
   },
   data: () => ({
     modalWifi: false,
