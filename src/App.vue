@@ -392,6 +392,15 @@ export default {
         this.wifi = resp.data;
       });
     },
+    playSound(url){
+      if(this.sound){
+        this.sound.pause()
+      }
+      if(url){
+        this.sound = new Audio(url)
+        this.sound.play()
+      }
+    },
     output(value) {
       let data = JSON.parse(value.data);
       if (data.gpio1 != null) {
@@ -405,6 +414,9 @@ export default {
             data.gpio1 ? this.config.o1.cardOnClass : this.config.o1.cardOffClass
           }`,
         });
+        if(this.config.o1.enableSound){
+          this.playSound(data.in1 ? this.config.o1.onSound : this.config.o1.offSound)
+        }
       }
       if (data.gpio2 != null) {
         this.addToast({
@@ -417,6 +429,9 @@ export default {
           }`,
         });
         this.g2 = data.gpio2;
+        if(this.config.o2.enableSound){
+          this.playSound(data.in1 ? this.config.o2.onSound : this.config.o2.offSound)
+        }
       }
     },
     addToast(data) {
@@ -435,6 +450,9 @@ export default {
             data.in1 ? this.config.i1.onClass : this.config.i1.offClass
           }`,
         });
+        if(this.config.i1.enableSound){
+          this.playSound(data.in1 ? this.config.i1.onSound : this.config.i1.offSound)
+        }
       }
       if (data.in2 != null) {
         this.i2 = data.in2;
@@ -447,6 +465,9 @@ export default {
             data.in2 ? this.config.i2.onClass : this.config.i2.offClass
           }`,
         });
+        if(this.config.i2.enableSound){
+          this.playSound(data.in1 ? this.config.i2.onSound : this.config.i2.offSound)
+        }
       }
     },
     wifiATT() {
