@@ -21,7 +21,59 @@
           </div>
           <!-- Modal body -->
           <div class="modal-body">
-            <div class="card">
+            <div class="row">
+              <div class="col">
+                <label for="timeourt">Tempo para Inversão da Saída 1: ms</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="timeout"
+                  id="timeout"
+                  min="500"
+                  max="60000"
+                  step="500"
+                  v-model="value.o1.timeout"
+                />
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="defaultCheck1"
+                    v-model="value.o1.timeoutEnabled"
+                  />
+                  <label class="form-check-label" for="defaultCheck1">
+                    Timer Ativo
+                  </label>
+                </div>
+              </div>
+              <div class="col">
+                <label for="timeourt">Tempo para Inversão da Saída 2: ms </label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="timeout"
+                  id="timeout"
+                  min="500"
+                  max="60000"
+                  step="500"
+                  v-model="value.o2.timeout"
+                />
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="defaultCheck1"
+                    v-model="value.o2.timeoutEnabled"
+                  />
+                  <label class="form-check-label" for="defaultCheck1">
+                    Timer Ativo
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="card mt-1">
               <div class="card-header">Saida 1</div>
               <div class="card-body">
                 <div class="row">
@@ -154,46 +206,46 @@
                         v-model="value.o1.btnTglClass"
                       />
                     </div>
-                  </div>                  
+                  </div>
                 </div>
                 <div class="row">
-                    <div class="col">
-                      <div class="form-check">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="defaultCheck1"
-                          v-model="value.o1.enableSound"
-                        />
-                        <label class="form-check-label" for="defaultCheck1">
-                          Som Ativado
-                        </label>
-                      </div>
+                  <div class="col">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="defaultCheck1"
+                        v-model="value.o1.enableSound"
+                      />
+                      <label class="form-check-label" for="defaultCheck1">
+                        Som Ativado
+                      </label>
                     </div>
                   </div>
-                  <div class="row">
-                    <div class="col">
-                      <label for="cardText1">Som Ligado</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="cardText1"
-                        placeholder="Url do audio"
-                        v-model="value.o1.onSound"
-                      />
-                    </div>
-                    <div class="col">
-                      <label for="cardText1">Som Desligado</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        id="cardText1"
-                        placeholder="Url do audio"
-                        v-model="value.o1.offSound"
-                      />
-                    </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <label for="cardText1">Som Ligado</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="cardText1"
+                      placeholder="Url do audio"
+                      v-model="value.o1.onSound"
+                    />
                   </div>
+                  <div class="col">
+                    <label for="cardText1">Som Desligado</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="cardText1"
+                      placeholder="Url do audio"
+                      v-model="value.o1.offSound"
+                    />
+                  </div>
+                </div>
               </div>
               <div class="card">
                 <div class="card-header">Saida 2</div>

@@ -2,33 +2,38 @@
   <div
         id="liveToast"
         class="toast"
-        :class="`${value.hideInToast ? 'hide' : 'show'} ${value.classTitle}`"
+        :class="`${data.hideInToast ? 'hide' : 'show'} ${data.classTitle}`"
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
         data-delay="2000"
       >
         <div class="toast-header">
-          <strong class="mr-auto">{{value.title}}</strong>
+          <strong class="mr-auto">{{data.title}}</strong>
           <button
             type="button"
             class="ml-2 mb-1 close"
-            :class="value.classBody"
+            :class="data.classBody"
             data-dismiss="toast"
             aria-label="Close"
-            @click="value.hideInToast = true"
+            @click="data.hideInToast = true"
           >
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="toast-body">{{value.body}}</div>
+        <div class="toast-body">{{data.body}}</div>
       </div>
 </template>
 
 <script>
 export default {
     name: "toast",
-    props: ['value']
+    props: ['value', 'data', 'number'],
+    // mounted(){
+    //   setTimeout(()=>{
+    //     this.$emit('remove', this.data.add)
+    //   }, 5000)
+    // }
 
 }
 </script>

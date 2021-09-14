@@ -84,8 +84,9 @@
                   />
                   <img v-else src="@/assets/volume-mute.svg" width="20" />
                 </button>
-                <button @click="loadData()" class="btn btn-link btn-sm m-0 p-0">
-                  <img src="@/assets/clock.svg" width="20" />
+                <button @click="config.o1.timeoutEnabled = !config.o1.timeoutEnabled" class="btn btn-link btn-sm m-0 p-0">
+                  <img v-if="config.o1.timeoutEnabled" src="@/assets/hourglass-split.svg" width="20" />
+                  <img v-else src="@/assets/hourglass.svg" width="20" />
                 </button>
               </div>
             </div>
@@ -133,8 +134,9 @@
                   />
                   <img v-else src="@/assets/volume-mute.svg" width="20" />
                 </button>
-                <button @click="loadData()" class="btn btn-link btn-sm m-0 p-0">
-                  <img src="@/assets/clock.svg" width="20" />
+                 <button @click="config.o2.timeoutEnabled = !config.o2.timeoutEnabled" class="btn btn-link btn-sm m-0 p-0">
+                  <img v-if="config.o2.timeoutEnabled" src="@/assets/hourglass-split.svg" width="20" />
+                  <img v-else src="@/assets/hourglass.svg" width="20" />
                 </button>
               </div>
             </div>
@@ -258,10 +260,9 @@
       class="position-fixed bottom-0 right-0 p-3"
       style="z-index: 5; right: 0; bottom: 0"
     >
-    <div >
-      <Toast v-model="ttt[0]"  />
-
-    </div>
+      <div v-for="(item, index) in toasts" :key="index">
+        <Toast :data="item" :number="index" @remove="removeToast($event)" />
+      </div>
     </div>
   </div>
 </template>
@@ -271,7 +272,7 @@ import Modal from "./components/modal.vue";
 import ModalAPI from "./components/modalAPI.vue";
 import ModalCFG from "./components/modalCfg.vue";
 // import ModalSound from "./components/modalSound.vue";
-import Toast from './components/toast.vue'
+import Toast from "./components/toast.vue";
 import "./assets/bootstrap.min.css";
 let sseClient;
 export default {
@@ -290,11 +291,12 @@ export default {
     modalSound1: false,
     modalSound2: false,
     hideInToast: true,
+    sound: null,
     g1: 0,
     g2: 0,
     i1: 0,
     i2: 0,
-    ttt :[{hideInToast: false, title: "Aham", body: "corpo"},],
+    toasts: [],
     wifi: {},
     stsWifi: [
       "Idle",
@@ -306,6 +308,7 @@ export default {
       "Desconectado",
     ],
     config: {
+      toastTime: 2000,
       o1: {
         enabled: true,
         cardText: "Saida 1",
@@ -322,6 +325,8 @@ export default {
         enableSound: true,
         onSound: "",
         offSound: "",
+        timeout:0,
+        timeoutEnabled: false
       },
       o2: {
         enabled: true,
@@ -339,6 +344,8 @@ export default {
         enableSound: true,
         onSound: "",
         offSound: "",
+        timeout: 0,
+        timeoutEnabled: false
       },
       i1: {
         enabled: true,
@@ -369,6 +376,12 @@ export default {
       if (timeout) {
         formData.append(`timeout`, timeout);
       }
+      if(out == 1 && this.config.o1.timeout > 0 && this.config.o1.timeoutEnabled){
+        formData.append(`timeout`, this.config.o1.timeout);
+      }
+      if(out == 2 && this.config.o2.timeout > 0 && this.config.o2.timeoutEnabled){
+        formData.append(`timeout`, this.config.o2.timeout);
+      }
       this.$http
         .post(`/gpio`, formData, {
           headers: {
@@ -398,29 +411,77 @@ export default {
       let data = JSON.parse(value.data);
       if (data.gpio1 != null) {
         this.g1 = data.gpio1;
+        this.addToast({
+          hideInToast: false,
+          title: "Saída",
+          body: `Saída 1 ${data.gpio1 ? "Ligada" : "Desligada"}`,
+          add: new Date().getTime(),
+          classTitle: `${
+            data.gpio1 ? this.config.o1.cardOnClass : this.config.o1.cardOffClass
+          }`,
+        });
       }
       if (data.gpio2 != null) {
+        this.addToast({
+          hideInToast: false,
+          title: "Saída",
+          body: `Saída 2 ${data.gpio2 ? "Ligada" : "Desligada"}`,
+          add: new Date().getTime(),
+          classTitle: `${
+            data.gpio2 ? this.config.o1.cardOnClass : this.config.o2.cardOffClass
+          }`,
+        });
         this.g2 = data.gpio2;
       }
+    },
+    addToast(data) {
+      this.toasts.push(data);
     },
     input(value) {
       let data = JSON.parse(value.data);
       if (data.in1 != null) {
-        this.showToast();
         this.i1 = data.in1;
+        this.addToast({
+          hideInToast: false,
+          title: "Entrada",
+          body: `Entrada 1 ${data.in1 ? "Ligada" : "Desligada"}`,
+          add: new Date().getTime(),
+          classTitle: `${
+            data.in1 ? this.config.i1.onClass : this.config.i1.offClass
+          }`,
+        });
+        this.playSound()
       }
       if (data.in2 != null) {
         this.i2 = data.in2;
+        this.addToast({
+          hideInToast: false,
+          title: "Entrada",
+          body: `Entrada 2 ${data.in2 ? "Ligada" : "Desligada"}`,
+          add: new Date().getTime(),
+          classTitle: `${
+            data.in2 ? this.config.i2.onClass : this.config.i2.offClass
+          }`,
+        });
       }
+    },
+    removeToast(e) {
+      this.toasts.splice(
+        this.toasts.findIndex((ele) => {
+          return (ele.add = e);
+        }),
+        1
+      );
+    },
+    playSound(){
+      if(this.sound == null){
+        this.sound = new Audio('https://www.salamisound.com/save_file/3615868898596387596343289148859647514');
+        this.sound.play();
+      }
+      console.log(this.sound);
     },
     wifiATT() {
       this.loadWifi();
-    },
-    showToast() {
-      this.hideInToast = false;
-      setTimeout(() => {
-        this.hideInToast = true;
-      }, 5000);
     },
     loadCfg() {
       let cfg = localStorage.getItem("cfgESP");
@@ -444,7 +505,8 @@ export default {
     },
   },
   mounted() {
-    sseClient = new EventSource("http://10.10.10.145/events");
+    sseClient = new EventSource("http://192.168.88.31/events");
+    // sseClient = new EventSource("http://10.10.10.145/events");
     // sseClient = new EventSource("/events");
     sseClient.onopen = function () {};
     sseClient.onerror = function () {};
@@ -453,6 +515,15 @@ export default {
     sseClient.addEventListener("wifi", this.wifiATT, false);
     this.loadData();
     document.title = "ESP01 IO";
+
+    setInterval(() => {
+      let now = new Date().getTime();
+      this.toasts.forEach((element, index) => {
+        if ((element.add + this.config.toastTime) < now) {
+          this.toasts.splice(index, 1);
+        }
+      });
+    }, 500);
   },
 };
 </script>
