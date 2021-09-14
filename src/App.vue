@@ -243,19 +243,6 @@
       v-model="config"
       @save="saveCFG"
     />
-    <!-- <ModalSound
-      v-if="modalSound1"
-      title="Entrada 1"
-      @close="modalSound1 = false"
-      @save="saveSound"
-    />
-    <ModalSound
-      v-if="modalSound2"
-      title="Entrada 2"
-      @close="modalSound2 = false"
-      @save="saveSound"
-    /> -->
-
     <div
       class="position-fixed bottom-0 right-0 p-3"
       style="z-index: 5; right: 0; bottom: 0"
@@ -271,7 +258,6 @@
 import Modal from "./components/modal.vue";
 import ModalAPI from "./components/modalAPI.vue";
 import ModalCFG from "./components/modalCfg.vue";
-// import ModalSound from "./components/modalSound.vue";
 import Toast from "./components/toast.vue";
 import "./assets/bootstrap.min.css";
 let sseClient;
@@ -281,7 +267,6 @@ export default {
     Modal,
     ModalAPI,
     ModalCFG,
-    // ModalSound,
     Toast,
   },
   data: () => ({
@@ -450,7 +435,6 @@ export default {
             data.in1 ? this.config.i1.onClass : this.config.i1.offClass
           }`,
         });
-        this.playSound()
       }
       if (data.in2 != null) {
         this.i2 = data.in2;
@@ -465,21 +449,6 @@ export default {
         });
       }
     },
-    removeToast(e) {
-      this.toasts.splice(
-        this.toasts.findIndex((ele) => {
-          return (ele.add = e);
-        }),
-        1
-      );
-    },
-    playSound(){
-      if(this.sound == null){
-        this.sound = new Audio('https://www.salamisound.com/save_file/3615868898596387596343289148859647514');
-        this.sound.play();
-      }
-      console.log(this.sound);
-    },
     wifiATT() {
       this.loadWifi();
     },
@@ -491,13 +460,8 @@ export default {
     },
     saveCFG() {
       localStorage.setItem("cfgESP", JSON.stringify(this.config));
-      console.log(JSON.stringify(this.config).length);
-    },
-    saveSound(event) {
-      console.log(event);
     },
     loadData() {
-      console.log("loadData");
       this.loadGpio();
       this.loadInput();
       this.loadWifi();
