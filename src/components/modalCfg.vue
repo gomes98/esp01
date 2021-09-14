@@ -23,6 +23,21 @@
           <div class="modal-body">
             <div class="row">
               <div class="col">
+                <label for="timeourt">Tempo Toast: ms</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  name="timeout"
+                  id="timeout"
+                  min="500"
+                  max="60000"
+                  step="500"
+                  v-model.number="value.toastTime"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
                 <label for="timeourt">Tempo para Inversão da Saída 1: ms</label>
                 <input
                   type="number"
