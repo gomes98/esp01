@@ -65,7 +65,7 @@
       <div class="card-header d-inline-flex">Saidas</div>
       <div class="card-body">
         <div class="d-flex flex-row justify-content-around flex-wrap">
-          <div class="card m-1">
+          <!-- <div class="card m-1">
             <div
               class="card-header"
               :class="g1 == 1 ? config.o1.cardOnClass : config.o1.cardOffClass"
@@ -114,8 +114,10 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="card m-1">
+          </div> -->
+          <Output v-model="g1" :config="config.o1" :out="setOutput" :pin="1"/>
+          <Output v-model="g2" :config="config.o2" :out="setOutput" :pin="2"/>
+          <!-- <div class="card m-1">
             <div
               class="card-header"
               :class="g2 == 1 ? config.o2.cardOnClass : config.o2.cardOffClass"
@@ -164,7 +166,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -174,7 +176,7 @@
         <div class="card-body">
           <div>
             <div class="d-flex flex-row justify-content-around">
-              <div class="card m-1">
+              <!-- <div class="card m-1">
                 <div class="card-header">
                   <div
                     class="d-flex flex-row justify-content-between flex-wrap"
@@ -201,8 +203,10 @@
                     {{ i1 == 0 ? config.i1.onText : config.i1.offText }}
                   </button>
                 </div>
-              </div>
-              <div class="card m-1">
+              </div> -->
+              <Input v-model="i1" :config="config.i1" :pin="1"/>
+              <Input v-model="i2" :config="config.i2" :pin="2"/>
+              <!-- <div class="card m-1">
                 <div class="card-header">
                   <div
                     class="d-flex flex-row justify-content-between flex-wrap"
@@ -229,7 +233,7 @@
                     {{ i2 == 0 ? config.i2.onText : config.i2.offText }}
                   </button>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -268,6 +272,8 @@ export default {
     ModalAPI: () => import ("./components/modalAPI.vue"),
     ModalCFG: () => import ("./components/modalCfg.vue"),
     Toast: () => import ("./components/toast.vue"),
+    Output: () => import ("./components/output.vue"),
+    Input: () => import ("./components/input.vue"),
   },
   data: () => ({
     modalWifi: false,
@@ -444,14 +450,14 @@ export default {
         this.addToast({
           hideInToast: false,
           title: "Entrada",
-          body: `Entrada 1 ${data.in1 ? "Ligada" : "Desligada"}`,
+          body: `Entrada 1 ${data.in1 ? "Desligada" : "Ligada"}`,
           add: new Date().getTime(),
           classTitle: `${
-            data.in1 ? this.config.i1.onClass : this.config.i1.offClass
+            data.in1 ? this.config.i1.offClass : this.config.i1.onClass
           }`,
         });
         if(this.config.i1.enableSound){
-          this.playSound(data.in1 ? this.config.i1.onSound : this.config.i1.offSound)
+          this.playSound(data.in1 ? this.config.i1.offSound : this.config.i1.onSound)
         }
       }
       if (data.in2 != null) {
@@ -459,14 +465,14 @@ export default {
         this.addToast({
           hideInToast: false,
           title: "Entrada",
-          body: `Entrada 2 ${data.in2 ? "Ligada" : "Desligada"}`,
+          body: `Entrada 2 ${data.in2 ? "Desligada" : "Ligada"}`,
           add: new Date().getTime(),
           classTitle: `${
-            data.in2 ? this.config.i2.onClass : this.config.i2.offClass
+            data.in2 ? this.config.i2.offClass : this.config.i2.onClass
           }`,
         });
         if(this.config.i2.enableSound){
-          this.playSound(data.in1 ? this.config.i2.onSound : this.config.i2.offSound)
+          this.playSound(data.in1 ? this.config.i2.offSound : this.config.i2.onSound)
         }
       }
     },
@@ -490,8 +496,8 @@ export default {
     },
   },
   mounted() {
-    sseClient = new EventSource("http://192.168.88.31/events");
-    // sseClient = new EventSource("http://10.10.10.145/events");
+    // sseClient = new EventSource("http://192.168.88.31/events");
+    sseClient = new EventSource("http://10.10.10.145/events");
     // sseClient = new EventSource("/events");
     sseClient.onopen = function () {};
     sseClient.onerror = function () {};
