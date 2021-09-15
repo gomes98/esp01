@@ -1,239 +1,162 @@
 <template>
-  <div>
-    <div class="card m-1">
-      <div class="card-header">
-        <div class="d-flex flex-row justify-content-between flex-wrap">
-          Rede
-          <button
-            @click="loadData()"
-            class="btn btn-outline-secondary btn-sm m-0 p-0"
-          >
-            <img src="@/assets/arrow-clockwise.svg" width="20" />
-          </button>
+  <div class="m-1">
+    <div class="accordion" id="accordionExample">
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h2 class="mb-0">
+            <div class="d-flex bd-highlight mb-0">
+              <div class="p-2 flex-grow-1 bd-highlight">
+                <button
+                  @click="collapseNetwork = !collapseNetwork"
+                  class="btn btn-link btn-block text-left"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  Rede {{ sseClient.readyState ? "Eventos ON": "Eventos OFF" }}
+                </button>
+              </div>
+              <div class="p-2 bd-highlight">
+                <button
+                  @click="loadData()"
+                  class="btn btn-outline-secondary btn-sm m-0 p-0"
+                >
+                  <img src="@/assets/arrow-clockwise.svg" width="20" />
+                </button>
+              </div>
+            </div>
+          </h2>
         </div>
-      </div>
-      <div class="card-body">
-        <div>
-          <div class="d-flex flex-row justify-content-around flex-wrap">
-            <p class="mx-1">
-              <strong>IP: </strong>
-              <small>{{ wifi.ip }}</small>
-            </p>
-            <p class="mx-1">
-              <strong>MAC: </strong>
-              <small>{{ wifi.mac }}</small>
-            </p>
-            <p class="mx-1">
-              <strong>Nome da Rede: </strong>
-              <small>{{ wifi.SSID }}</small>
-            </p>
-            <p class="mx-1">
-              <strong>Sinal: </strong>
-              <small>{{ wifi.RSSI }}</small>
-            </p>
-            <p class="mx-1">
-              <strong>Hostname: </strong>
-              <small>{{ wifi.hostname }}</small>
-            </p>
-            <p class="mx-1">
-              <strong>Status Wifi: </strong>
-              <small>{{ stsWifi[wifi.status] }}</small>
-            </p>
-            <button
-              class="btn btn-outline-secondary ml-auto p-2"
-              @click="modalApi = true"
-            >
-              API
-            </button>
-            <button
-              class="btn btn-outline-secondary ml-auto p-2"
-              @click="modalCfg = true"
-            >
-              Cfg
-            </button>
-            <button
-              class="btn btn-outline-secondary ml-auto p-2"
-              @click="modalWifi = true"
-            >
-              <img src="../src/assets/wifi.svg" width="20" /> Selecionar
-            </button>
+
+        <div
+          id="collapseOne"
+          class="collapse"
+          :class="collapseNetwork ? 'show' : 'hide'"
+          aria-labelledby="headingOne"
+          data-parent="#accordionExample"
+        >
+          <div class="card-body">
+            <div class="card-body">
+              <div>
+                <div class="d-flex flex-row justify-content-around flex-wrap">
+                  <p class="mx-1">
+                    <strong>IP: </strong>
+                    <small>{{ wifi.ip }}</small>
+                  </p>
+                  <p class="mx-1">
+                    <strong>MAC: </strong>
+                    <small>{{ wifi.mac }}</small>
+                  </p>
+                  <p class="mx-1">
+                    <strong>Nome da Rede: </strong>
+                    <small>{{ wifi.SSID }}</small>
+                  </p>
+                  <p class="mx-1">
+                    <strong>Sinal: </strong>
+                    <small>{{ wifi.RSSI }}</small>
+                  </p>
+                  <p class="mx-1">
+                    <strong>Hostname: </strong>
+                    <small>{{ wifi.hostname }}</small>
+                  </p>
+                  <p class="mx-1">
+                    <strong>Status Wifi: </strong>
+                    <small>{{ stsWifi[wifi.status] }}</small>
+                  </p>
+                  <button
+                    class="btn btn-outline-secondary ml-auto p-2"
+                    @click="modalApi = true"
+                  >
+                    API
+                  </button>
+                  <button
+                    class="btn btn-outline-secondary ml-auto p-2"
+                    @click="modalCfg = true"
+                  >
+                    Cfg
+                  </button>
+                  <button
+                    class="btn btn-outline-secondary ml-auto p-2"
+                    @click="modalWifi = true"
+                  >
+                    <img src="../src/assets/wifi.svg" width="20" /> Selecionar
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="card m-1">
-      <div class="card-header d-inline-flex">Saidas</div>
-      <div class="card-body">
-        <div class="d-flex flex-row justify-content-around flex-wrap">
-          <!-- <div class="card m-1">
-            <div
-              class="card-header"
-              :class="g1 == 1 ? config.o1.cardOnClass : config.o1.cardOffClass"
+      <div class="card my-1">
+        <div class="card-header" id="headingTwo">
+          <h2 class="mb-0">
+            <button
+              class="btn btn-link btn-block text-left"
+              @click="collapseOutput = !collapseOutput"
+              type="button"
+              data-toggle="collapse"
+              data-target="#collapseTwo"
+              aria-expanded="false"
+              aria-controls="collapseTwo"
             >
-              <div class="d-flex flex-row justify-content-between flex-wrap">
-                {{ config.o1.cardText }} -
-                {{ g1 == 1 ? config.o1.cardOnText : config.o1.cardOffText }}
-                <button
-                  @click="config.o1.enableSound = !config.o1.enableSound"
-                  class="btn btn-link btn-sm mx-1 p-0"
-                >
-                  <img
-                    v-if="config.o1.enableSound"
-                    src="@/assets/volume-up.svg"
-                    width="20"
-                  />
-                  <img v-else src="@/assets/volume-mute.svg" width="20" />
-                </button>
-                <button @click="config.o1.timeoutEnabled = !config.o1.timeoutEnabled" class="btn btn-link btn-sm m-0 p-0">
-                  <img v-if="config.o1.timeoutEnabled" src="@/assets/hourglass-split.svg" width="20" />
-                  <img v-else src="@/assets/hourglass.svg" width="20" />
-                </button>
-              </div>
+              Saídas
+            </button>
+          </h2>
+        </div>
+        <div
+          id="collapseTwo"
+          class="collapse"
+          :class="collapseOutput ? 'show' : ''"
+          aria-labelledby="headingTwo"
+          data-parent="#accordionExample"
+        >
+          <div class="card-body">
+            <div class="d-flex flex-row justify-content-around flex-wrap">
+              <Output
+                v-model="g1"
+                :config="config.o1"
+                :out="setOutput"
+                :pin="1"
+              />
+              <Output
+                v-model="g2"
+                :config="config.o2"
+                :out="setOutput"
+                :pin="2"
+              />
             </div>
-            <div class="card-body">
-              <div>
-                <div class="d-flex flex-row justify-content-around flex-wrap">
-                  <button
-                    :class="config.o1.btnOnClass"
-                    @click="setOutput(1, '1')"
-                  >
-                    {{ config.o1.btnOnText }}
-                  </button>
-                  <button
-                    :class="config.o1.btnOffClass"
-                    @click="setOutput(1, '0')"
-                  >
-                    {{ config.o1.btnOffText }}
-                  </button>
-                  <button
-                    :class="config.o1.btnTglClass"
-                    @click="setOutput(1, 't')"
-                  >
-                    {{ config.o1.btnTglText }}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div> -->
-          <Output v-model="g1" :config="config.o1" :out="setOutput" :pin="1"/>
-          <Output v-model="g2" :config="config.o2" :out="setOutput" :pin="2"/>
-          <!-- <div class="card m-1">
-            <div
-              class="card-header"
-              :class="g2 == 1 ? config.o2.cardOnClass : config.o2.cardOffClass"
-            >
-              <div class="d-flex flex-row justify-content-between flex-wrap">
-                {{ config.o2.cardText }} -
-                {{ g2 == 1 ? config.o2.cardOnText : config.o2.cardOffText }}
-                <button
-                  @click="config.o2.enableSound = !config.o2.enableSound"
-                  class="btn btn-link btn-sm mx-1 p-0"
-                >
-                  <img
-                    v-if="config.o2.enableSound"
-                    src="@/assets/volume-up.svg"
-                    width="20"
-                  />
-                  <img v-else src="@/assets/volume-mute.svg" width="20" />
-                </button>
-                 <button @click="config.o2.timeoutEnabled = !config.o2.timeoutEnabled" class="btn btn-link btn-sm m-0 p-0">
-                  <img v-if="config.o2.timeoutEnabled" src="@/assets/hourglass-split.svg" width="20" />
-                  <img v-else src="@/assets/hourglass.svg" width="20" />
-                </button>
-              </div>
-            </div>
-            <div class="card-body">
-              <div>
-                <div class="d-flex flex-row justify-content-around flex-wrap">
-                  <button
-                    :class="config.o2.btnOnClass"
-                    @click="setOutput(2, '1')"
-                  >
-                    {{ config.o2.btnOnText }}
-                  </button>
-                  <button
-                    :class="config.o2.btnOffClass"
-                    @click="setOutput(2, '0')"
-                  >
-                    {{ config.o2.btnOffText }}
-                  </button>
-                  <button
-                    :class="config.o2.btnTglClass"
-                    @click="setOutput(2, 't')"
-                  >
-                    {{ config.o2.btnTglText }}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div> -->
+          </div>
         </div>
       </div>
-    </div>
-    <div class="card m-1">
-      <div class="card-header">Entradas</div>
-      <div class="card-body">
-        <div class="card-body">
-          <div>
-            <div class="d-flex flex-row justify-content-around">
-              <!-- <div class="card m-1">
-                <div class="card-header">
-                  <div
-                    class="d-flex flex-row justify-content-between flex-wrap"
-                  >
-                    Entrada 1
-                    <button
-                      @click="config.i1.enableSound = !config.i1.enableSound"
-                      class="btn btn-link btn-sm mx-1 p-0"
-                    >
-                      <img
-                        v-if="config.i1.enableSound"
-                        src="@/assets/volume-up.svg"
-                        width="20"
-                      />
-                      <img v-else src="@/assets/volume-mute.svg" width="20" />
-                    </button>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <button
-                    class="btn btn-lg"
-                    :class="i1 == 0 ? config.i1.onClass : config.i1.offClass"
-                  >
-                    {{ i1 == 0 ? config.i1.onText : config.i1.offText }}
-                  </button>
-                </div>
-              </div> -->
-              <Input v-model="i1" :config="config.i1" :pin="1"/>
-              <Input v-model="i2" :config="config.i2" :pin="2"/>
-              <!-- <div class="card m-1">
-                <div class="card-header">
-                  <div
-                    class="d-flex flex-row justify-content-between flex-wrap"
-                  >
-                    Entrada 2
-                    <button
-                      @click="config.i2.enableSound = !config.i2.enableSound"
-                      class="btn btn-link btn-sm mx-1 p-0"
-                    >
-                      <img
-                        v-if="config.i2.enableSound"
-                        src="@/assets/volume-up.svg"
-                        width="20"
-                      />
-                      <img v-else src="@/assets/volume-mute.svg" width="20" />
-                    </button>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <button
-                    class="btn btn-lg"
-                    :class="i2 == 0 ? config.i2.onClass : config.i2.offClass"
-                  >
-                    {{ i2 == 0 ? config.i2.onText : config.i2.offText }}
-                  </button>
-                </div>
-              </div> -->
+      <div class="card">
+        <div class="card-header" id="headingThree">
+          <h2 class="mb-0">
+            <button
+              class="btn btn-link btn-block text-left collapsed"
+              @click="collapseImput = !collapseImput"
+              type="button"
+              data-toggle="collapse"
+              data-target="#collapseThree"
+              aria-expanded="false"
+              aria-controls="collapseThree"
+            >
+              Entradas
+            </button>
+          </h2>
+        </div>
+        <div
+          id="collapseThree"
+          class="collapse"
+          :class="collapseImput ? 'show' : ''"
+          aria-labelledby="headingThree"
+          data-parent="#accordionExample"
+        >
+          <div class="card-body">
+            <div class="d-flex flex-row justify-content-around flex-wrap">
+              <Input v-model="i1" :config="config.i1" :pin="1" />
+              <Input v-model="i2" :config="config.i2" :pin="2" />
             </div>
           </div>
         </div>
@@ -264,18 +187,19 @@
 // import ModalCFG from "./components/modalCfg.vue";
 // import Toast from "./components/toast.vue";
 import "./assets/bootstrap.min.css";
-let sseClient;
+// let sseClient;
 export default {
   name: "App",
   components: {
-    Modal : () => import ("./components/modal.vue"),
-    ModalAPI: () => import ("./components/modalAPI.vue"),
-    ModalCFG: () => import ("./components/modalCfg.vue"),
-    Toast: () => import ("./components/toast.vue"),
-    Output: () => import ("./components/output.vue"),
-    Input: () => import ("./components/input.vue"),
+    Modal: () => import("./components/modal.vue"),
+    ModalAPI: () => import("./components/modalAPI.vue"),
+    ModalCFG: () => import("./components/modalCfg.vue"),
+    Toast: () => import("./components/toast.vue"),
+    Output: () => import("./components/output.vue"),
+    Input: () => import("./components/input.vue"),
   },
   data: () => ({
+    sseClient: {},
     modalWifi: false,
     modalApi: false,
     modalCfg: false,
@@ -283,6 +207,9 @@ export default {
     modalSound2: false,
     hideInToast: true,
     sound: null,
+    collapseNetwork: false,
+    collapseOutput: true,
+    collapseImput: true,
     g1: 0,
     g2: 0,
     i1: 0,
@@ -316,8 +243,8 @@ export default {
         enableSound: true,
         onSound: "",
         offSound: "",
-        timeout:0,
-        timeoutEnabled: false
+        timeout: 0,
+        timeoutEnabled: false,
       },
       o2: {
         enabled: true,
@@ -336,7 +263,7 @@ export default {
         onSound: "",
         offSound: "",
         timeout: 0,
-        timeoutEnabled: false
+        timeoutEnabled: false,
       },
       i1: {
         enabled: true,
@@ -367,10 +294,18 @@ export default {
       if (timeout) {
         formData.append(`timeout`, timeout);
       }
-      if(out == 1 && this.config.o1.timeout > 0 && this.config.o1.timeoutEnabled){
+      if (
+        out == 1 &&
+        this.config.o1.timeout > 0 &&
+        this.config.o1.timeoutEnabled
+      ) {
         formData.append(`timeout`, this.config.o1.timeout);
       }
-      if(out == 2 && this.config.o2.timeout > 0 && this.config.o2.timeoutEnabled){
+      if (
+        out == 2 &&
+        this.config.o2.timeout > 0 &&
+        this.config.o2.timeoutEnabled
+      ) {
         formData.append(`timeout`, this.config.o2.timeout);
       }
       this.$http
@@ -398,13 +333,13 @@ export default {
         this.wifi = resp.data;
       });
     },
-    playSound(url){
-      if(this.sound){
-        this.sound.pause()
+    playSound(url) {
+      if (this.sound) {
+        this.sound.pause();
       }
-      if(url){
-        this.sound = new Audio(url)
-        this.sound.play()
+      if (url) {
+        this.sound = new Audio(url);
+        this.sound.play();
       }
     },
     output(value) {
@@ -417,11 +352,15 @@ export default {
           body: `Saída 1 ${data.gpio1 ? "Ligada" : "Desligada"}`,
           add: new Date().getTime(),
           classTitle: `${
-            data.gpio1 ? this.config.o1.cardOnClass : this.config.o1.cardOffClass
+            data.gpio1
+              ? this.config.o1.cardOnClass
+              : this.config.o1.cardOffClass
           }`,
         });
-        if(this.config.o1.enableSound){
-          this.playSound(data.in1 ? this.config.o1.onSound : this.config.o1.offSound)
+        if (this.config.o1.enableSound) {
+          this.playSound(
+            data.in1 ? this.config.o1.onSound : this.config.o1.offSound
+          );
         }
       }
       if (data.gpio2 != null) {
@@ -431,12 +370,16 @@ export default {
           body: `Saída 2 ${data.gpio2 ? "Ligada" : "Desligada"}`,
           add: new Date().getTime(),
           classTitle: `${
-            data.gpio2 ? this.config.o1.cardOnClass : this.config.o2.cardOffClass
+            data.gpio2
+              ? this.config.o1.cardOnClass
+              : this.config.o2.cardOffClass
           }`,
         });
         this.g2 = data.gpio2;
-        if(this.config.o2.enableSound){
-          this.playSound(data.in1 ? this.config.o2.onSound : this.config.o2.offSound)
+        if (this.config.o2.enableSound) {
+          this.playSound(
+            data.in1 ? this.config.o2.onSound : this.config.o2.offSound
+          );
         }
       }
     },
@@ -456,8 +399,10 @@ export default {
             data.in1 ? this.config.i1.offClass : this.config.i1.onClass
           }`,
         });
-        if(this.config.i1.enableSound){
-          this.playSound(data.in1 ? this.config.i1.offSound : this.config.i1.onSound)
+        if (this.config.i1.enableSound) {
+          this.playSound(
+            data.in1 ? this.config.i1.offSound : this.config.i1.onSound
+          );
         }
       }
       if (data.in2 != null) {
@@ -471,8 +416,10 @@ export default {
             data.in2 ? this.config.i2.offClass : this.config.i2.onClass
           }`,
         });
-        if(this.config.i2.enableSound){
-          this.playSound(data.in1 ? this.config.i2.offSound : this.config.i2.onSound)
+        if (this.config.i2.enableSound) {
+          this.playSound(
+            data.in1 ? this.config.i2.offSound : this.config.i2.onSound
+          );
         }
       }
     },
@@ -480,13 +427,28 @@ export default {
       this.loadWifi();
     },
     loadCfg() {
-      let cfg = localStorage.getItem("cfgESP");
-      if (cfg) {
-        this.config = JSON.parse(cfg);
-      }
+      // let cfg = localStorage.getItem("cfgESP");
+      // if (cfg) {
+      //   this.config = JSON.parse(cfg);
+      // }
+      this.$http(`/config`).then((resp) => {
+        if(resp.status == 200){
+          this.config = resp.data;
+        }
+      });
     },
     saveCFG() {
-      localStorage.setItem("cfgESP", JSON.stringify(this.config));
+      // localStorage.setItem("cfgESP", JSON.stringify(this.config));
+      // console.log(JSON.stringify(this.config));
+      let formData = new FormData();
+      formData.append(`save`, JSON.stringify(this.config));
+      this.$http
+        .post(`/config`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then(() => {});
     },
     loadData() {
       this.loadGpio();
@@ -496,21 +458,21 @@ export default {
     },
   },
   mounted() {
-    // sseClient = new EventSource("http://192.168.88.31/events");
-    sseClient = new EventSource("http://10.10.10.145/events");
-    // sseClient = new EventSource("/events");
-    sseClient.onopen = function () {};
-    sseClient.onerror = function () {};
-    sseClient.addEventListener("output", this.output, false);
-    sseClient.addEventListener("input", this.input, false);
-    sseClient.addEventListener("wifi", this.wifiATT, false);
+    this.sseClient = new EventSource("http://192.168.88.31/events");
+    // this.sseClient = new EventSource("http://10.10.10.145/events");
+    // this.sseClient = new EventSource("/events");
+    this.sseClient.onopen = function () {};
+    this.sseClient.onerror = function () {};
+    this.sseClient.addEventListener("output", this.output, false);
+    this.sseClient.addEventListener("input", this.input, false);
+    this.sseClient.addEventListener("wifi", this.wifiATT, false);
     this.loadData();
     document.title = "ESP01 IO";
 
     setInterval(() => {
       let now = new Date().getTime();
       this.toasts.forEach((element, index) => {
-        if ((element.add + this.config.toastTime) < now) {
+        if (element.add + this.config.toastTime < now) {
           this.toasts.splice(index, 1);
         }
       });
