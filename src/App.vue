@@ -485,10 +485,8 @@ export default {
       this.loadCfg();
     },
     receiveMsg(value) {
-      console.log(value);
       let rcvData = JSON.parse(value.data);
       if(value.data){
-        console.log(value.data.length);
       }
       if (rcvData.chat) {
         this.mensagens += `${rcvData.nickName} > ${rcvData.mensagem}\n`;
