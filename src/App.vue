@@ -15,7 +15,7 @@
                   aria-expanded="true"
                   aria-controls="collapseOne"
                 >
-                  Rede {{ sseClient.readyState ? "Eventos ON": "Eventos OFF" }}
+                  Rede {{ sseClient.readyState ? "Eventos ON" : "Eventos OFF" }}
                 </button>
               </div>
               <div class="p-2 bd-highlight">
@@ -23,7 +23,7 @@
                   @click="loadData()"
                   class="btn btn-outline-secondary btn-sm m-0 p-0"
                 >
-                  <img src="@/assets/arrow-clockwise.svg" width="20" />
+                  <img src="@/assets/ac.svg" width="20" />
                 </button>
               </div>
             </div>
@@ -69,19 +69,19 @@
                     class="btn btn-outline-secondary ml-auto p-2"
                     @click="modalApi = true"
                   >
-                    API
+                    <img src="../src/assets/c.svg" width="20" /> API
                   </button>
                   <button
                     class="btn btn-outline-secondary ml-auto p-2"
                     @click="modalCfg = true"
                   >
-                    Cfg
+                    <img src="../src/assets/g.svg" width="20" /> Cfg
                   </button>
                   <button
                     class="btn btn-outline-secondary ml-auto p-2"
                     @click="modalWifi = true"
                   >
-                    <img src="../src/assets/wifi.svg" width="20" /> Selecionar
+                    <img src="../src/assets/wf.svg" width="20" /> Selecionar
                   </button>
                 </div>
               </div>
@@ -178,6 +178,29 @@
         <Toast :data="item" :number="index" @remove="removeToast($event)" />
       </div>
     </div>
+    <div
+      class="position-fixed bottom-0 left-0 p-3"
+      style="z-index: 5; left: 0; bottom: 0"
+    >
+      <!-- <button
+        type="button"
+        class="btn btn-info rounded-circle p-1"
+        @click="modalFile = true"
+      >
+        <img src="../src/assets/upl.svg" class="m-1" width="20" alt="Upload" /></button
+      > -->
+      <br />
+      <br />
+      <button
+        type="button"
+        class="btn btn-warning rounded-circle p-1"
+        @click="modalChat = true"
+      >
+        <img src="../src/assets/ct.svg" class="m-1" width="20" />
+      </button>
+    </div>
+    <Chat v-if="modalChat" @close="modalChat = false" v-model="mensagens" />
+    <!-- <File v-if="modalFile" @close="modalFile = false" /> -->
   </div>
 </template>
 
@@ -197,12 +220,16 @@ export default {
     Toast: () => import("./components/toast.vue"),
     Output: () => import("./components/output.vue"),
     Input: () => import("./components/input.vue"),
+    Chat: () => import("./components/mdChat.vue"),
+    // File: () => import("./components/mdFile.vue"),
   },
   data: () => ({
     sseClient: {},
     modalWifi: false,
     modalApi: false,
     modalCfg: false,
+    modalChat: false,
+    modalFile: false,
     modalSound1: false,
     modalSound2: false,
     hideInToast: true,
@@ -210,6 +237,7 @@ export default {
     collapseNetwork: false,
     collapseOutput: true,
     collapseImput: true,
+    mensagens: "",
     g1: 0,
     g2: 0,
     i1: 0,
@@ -432,7 +460,7 @@ export default {
       //   this.config = JSON.parse(cfg);
       // }
       this.$http(`/config`).then((resp) => {
-        if(resp.status == 200){
+        if (resp.status == 200) {
           this.config = resp.data;
         }
       });
@@ -456,16 +484,27 @@ export default {
       this.loadWifi();
       this.loadCfg();
     },
+    receiveMsg(value) {
+      console.log(value);
+      let rcvData = JSON.parse(value.data);
+      if(value.data){
+        console.log(value.data.length);
+      }
+      if (rcvData.chat) {
+        this.mensagens += `${rcvData.nickName} > ${rcvData.mensagem}\n`;
+      }
+    },
   },
   mounted() {
-    this.sseClient = new EventSource("http://192.168.88.31/events");
+    // this.sseClient = new EventSource("http://192.168.88.31/events");
     // this.sseClient = new EventSource("http://10.10.10.145/events");
-    // this.sseClient = new EventSource("/events");
+    this.sseClient = new EventSource(`/events`);
     this.sseClient.onopen = function () {};
     this.sseClient.onerror = function () {};
     this.sseClient.addEventListener("output", this.output, false);
     this.sseClient.addEventListener("input", this.input, false);
     this.sseClient.addEventListener("wifi", this.wifiATT, false);
+    this.sseClient.addEventListener("sse", this.receiveMsg, false);
     this.loadData();
     document.title = "ESP01 IO";
 

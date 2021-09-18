@@ -9,10 +9,10 @@
         >
           <img
             v-if="config.enableSound"
-            src="@/assets/volume-up.svg"
+            src="@/assets/vu.svg"
             width="20"
           />
-          <img v-else src="@/assets/volume-mute.svg" width="20" />
+          <img v-else src="@/assets/vm.svg" width="20" />
         </button>
       </div>
     </div>

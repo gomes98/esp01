@@ -13,14 +13,14 @@
                 >
                   <img
                     v-if="config.enableSound"
-                    src="@/assets/volume-up.svg"
+                    src="@/assets/vu.svg"
                     width="20"
                   />
-                  <img v-else src="@/assets/volume-mute.svg" width="20" />
+                  <img v-else src="@/assets/vm.svg" width="20" />
                 </button>
                 <button @click="config.timeoutEnabled = !config.timeoutEnabled" class="btn btn-link btn-sm m-0 p-0">
-                  <img v-if="config.timeoutEnabled" src="@/assets/hourglass-split.svg" width="20" />
-                  <img v-else src="@/assets/hourglass.svg" width="20" />
+                  <img v-if="config.timeoutEnabled" src="@/assets/hgs.svg" width="20" />
+                  <img v-else src="@/assets/hg.svg" width="20" />
                 </button>
               </div>
             </div>

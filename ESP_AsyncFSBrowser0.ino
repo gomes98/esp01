@@ -65,12 +65,6 @@ void conWifi() {
     String ssid = readFile("/cfg.ssid");
     String password = readFile("/cfg.password");
     WiFi.begin(ssid, password);
-    //    if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    //      WiFi.disconnect(false);
-    //      delay(1000);
-    //      WiFi.begin(ssid, password);
-    //      events.send("wifi", "wifi");
-    //    }
   }
 }
 
@@ -260,7 +254,42 @@ void setup() {
     request->send(200, "application/json", wifi);
   });
 
-  server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html");
+  server.on("/config", HTTP_POST, [](AsyncWebServerRequest * request) {
+    String wifi = "{";
+    if (request->hasParam("save", true)) {
+      AsyncWebParameter* p = request->getParam("save", true);
+      const char* state = p->value().c_str();
+      writeFile(state, "/config.json");
+      request->send(200);
+    } else {
+      request->send(400);
+    }
+  });
+  server.on("/config", HTTP_GET, [](AsyncWebServerRequest * request) {
+    if (SPIFFS.exists("/config.json")) {
+      String ret = "";
+      ret = readFile("/config.json");
+      request->send(200, "application/json", ret);
+    } else {
+      request->send(404);
+    }
+
+  });
+  server.on("/sse", HTTP_POST, [](AsyncWebServerRequest * request) {
+    String wifi = "{";
+    if (request->hasParam("data", true)) {
+      AsyncWebParameter* p = request->getParam("data", true);
+      String d = "";
+      d += p->value().c_str();
+      d += "";
+      events.send(d.c_str(), "sse", millis());
+      request->send(200);
+    } else {
+      request->send(400);
+    }
+  });
+
+  server.serveStatic("/", SPIFFS, "/").setDefaultFile("index.html").setCacheControl("max-age=3600");
 
   server.onNotFound([](AsyncWebServerRequest * request) {
     request->redirect("/");

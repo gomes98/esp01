@@ -6,7 +6,7 @@
           <!-- Modal Header -->
           <div class="modal-header d-inline-flex">
             <h4 class="modal-title">Redes Disponiveis</h4>
-            <button class="btn ml-auto p-2" type="button" @click="loadWifi"><img src="@/assets/arrow-clockwise.svg" width="20"></button>
+            <button class="btn ml-auto p-2" type="button" @click="loadWifi"><img src="@/assets/ac.svg" width="20"></button>
             <button
               type="button"
               class="close"
