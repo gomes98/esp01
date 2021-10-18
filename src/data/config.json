@@ -1,0 +1,61 @@
+{
+    "toastTime": 2000,
+    "o1": {
+        "enabled": true,
+        "cardText": "Saida 1",
+        "cardOnText": "Ligada",
+        "cardOffText": "Desligada",
+        "cardOnClass": "bg-success text-white",
+        "cardOffClass": "bg-danger text-white",
+        "btnOnClass": "btn btn-lg btn-success mx-4 my-1",
+        "btnOnText": "Liga",
+        "btnOffClass": "btn btn-lg btn-danger mx-4 my-1",
+        "btnOffText": "Desliga",
+        "btnTglClass": "btn btn-lg btn-warning mx-4 my-1",
+        "btnTglText": "Inverter",
+        "enableSound": true,
+        "onSound": "",
+        "offSound": "",
+        "timeout": 0,
+        "timeoutEnabled": false
+    },
+    "o2": {
+        "enabled": true,
+        "cardText": "Saida 2",
+        "cardOnText": "Ligada",
+        "cardOffText": "Desligada",
+        "cardOnClass": "bg-success text-white",
+        "cardOffClass": "bg-danger text-white",
+        "btnOnClass": "btn btn-lg btn-success mx-4 my-1",
+        "btnOnText": "Liga",
+        "btnOffClass": "btn btn-lg btn-danger mx-4 my-1",
+        "btnOffText": "Desliga",
+        "btnTglClass": "btn btn-lg btn-warning mx-4 my-1",
+        "btnTglText": "Inverter",
+        "enableSound": true,
+        "onSound": "",
+        "offSound": "",
+        "timeout": 0,
+        "timeoutEnabled": false
+    },
+    "i1": {
+        "enabled": true,
+        "onText": "Ligado",
+        "onClass": "bg-success text-white",
+        "offText": "Desligado",
+        "offClass": "bg-danger text-white",
+        "enableSound": true,
+        "onSound": "",
+        "offSound": ""
+    },
+    "i2": {
+        "enabled": true,
+        "onText": "Ligado",
+        "onClass": "bg-success text-white",
+        "offText": "Desligado",
+        "offClass": "bg-danger text-white",
+        "enableSound": true,
+        "onSound": "",
+        "offSound": ""
+    }
+}

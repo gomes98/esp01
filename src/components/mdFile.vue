@@ -89,15 +89,23 @@ export default {
       let reader = new FileReader()
       reader.onload = () =>{
         let d = reader.result
+        // console.log(d);
+        // console.log(d.length)
+        let partes = d.length / 500
+        // console.log(partes)
         let parte = []
-        for (let index = 0; index < 100; index++) {
-          parte.push(d[index]);
-          
-        }
-        console.log(JSON.stringify(parte).length);
+        let loop = 0
+        do {
+          console.log(loop, partes);
+          parte.push(d.substring((500*loop),(loop*500)+500))
+          loop ++;
+        } while (loop < partes );
+          // parte.push(d.substring((500*loop)))
+        console.log(parte);
+        // console.log(JSON.stringify(parte).length);
         // console.log(reader.result);
         }
-      reader.readAsArrayBuffer(e.srcElement.files[0])
+      reader.readAsDataURL(e.srcElement.files[0])
     }
   },
   mounted() {

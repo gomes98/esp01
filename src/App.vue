@@ -15,8 +15,7 @@
                   aria-expanded="true"
                   aria-controls="collapseOne"
                 >
-                  Rede {{ sseClient.readyState ? "Eventos ON" : "Eventos OFF" }}
-                </button>
+                  Rede                </button>
               </div>
               <div class="p-2 bd-highlight">
                 <button
@@ -182,15 +181,6 @@
       class="position-fixed bottom-0 left-0 p-3"
       style="z-index: 5; left: 0; bottom: 0"
     >
-      <!-- <button
-        type="button"
-        class="btn btn-info rounded-circle p-1"
-        @click="modalFile = true"
-      >
-        <img src="../src/assets/upl.svg" class="m-1" width="20" alt="Upload" /></button
-      > -->
-      <br />
-      <br />
       <button
         type="button"
         class="btn btn-warning rounded-circle p-1"
@@ -198,19 +188,24 @@
       >
         <img src="../src/assets/ct.svg" class="m-1" width="20" />
       </button>
+      <br />
+      <br />
+      <button
+        type="button"
+        class="btn btn-primary rounded-circle p-1"
+        @click="modalFile = true"
+      >
+        <img src="../src/assets/ct.svg" class="m-1" width="20" />
+      </button>
     </div>
     <Chat v-if="modalChat" @close="modalChat = false" v-model="mensagens" />
-    <!-- <File v-if="modalFile" @close="modalFile = false" /> -->
+    <File v-if="modalFile" @close="modalFile = false" />
   </div>
 </template>
 
 <script>
-// import Modal from "./components/modal.vue";
-// import ModalAPI from "./components/modalAPI.vue";
-// import ModalCFG from "./components/modalCfg.vue";
-// import Toast from "./components/toast.vue";
-import "./assets/bootstrap.min.css";
-// let sseClient;
+import sse from './plugins/sse'
+import config from './data/config.json'
 export default {
   name: "App",
   components: {
@@ -221,10 +216,10 @@ export default {
     Output: () => import("./components/output.vue"),
     Input: () => import("./components/input.vue"),
     Chat: () => import("./components/mdChat.vue"),
-    // File: () => import("./components/mdFile.vue"),
+    File: () => import("./components/mdFile.vue"),
   },
   data: () => ({
-    sseClient: {},
+    // sseClient: {},
     modalWifi: false,
     modalApi: false,
     modalCfg: false,
@@ -253,67 +248,7 @@ export default {
       "Conexão Perdida",
       "Desconectado",
     ],
-    config: {
-      toastTime: 2000,
-      o1: {
-        enabled: true,
-        cardText: "Saida 1",
-        cardOnText: "Ligada",
-        cardOffText: "Desligada",
-        cardOnClass: "bg-success text-white",
-        cardOffClass: "bg-danger text-white",
-        btnOnClass: "btn btn-lg btn-success mx-4 my-1",
-        btnOnText: "Liga",
-        btnOffClass: "btn btn-lg btn-danger mx-4 my-1",
-        btnOffText: "Desliga",
-        btnTglClass: "btn btn-lg btn-warning mx-4 my-1",
-        btnTglText: "Inverter",
-        enableSound: true,
-        onSound: "",
-        offSound: "",
-        timeout: 0,
-        timeoutEnabled: false,
-      },
-      o2: {
-        enabled: true,
-        cardText: "Saida 2",
-        cardOnText: "Ligada",
-        cardOffText: "Desligada",
-        cardOnClass: "bg-success text-white",
-        cardOffClass: "bg-danger text-white",
-        btnOnClass: "btn btn-lg btn-success mx-4 my-1",
-        btnOnText: "Liga",
-        btnOffClass: "btn btn-lg btn-danger mx-4 my-1",
-        btnOffText: "Desliga",
-        btnTglClass: "btn btn-lg btn-warning mx-4 my-1",
-        btnTglText: "Inverter",
-        enableSound: true,
-        onSound: "",
-        offSound: "",
-        timeout: 0,
-        timeoutEnabled: false,
-      },
-      i1: {
-        enabled: true,
-        onText: "Ligado",
-        onClass: "bg-success text-white",
-        offText: "Desligado",
-        offClass: "bg-danger text-white",
-        enableSound: true,
-        onSound: "",
-        offSound: "",
-      },
-      i2: {
-        enabled: true,
-        onText: "Ligado",
-        onClass: "bg-success text-white",
-        offText: "Desligado",
-        offClass: "bg-danger text-white",
-        enableSound: true,
-        onSound: "",
-        offSound: "",
-      },
-    },
+    config
   }),
   methods: {
     setOutput(out, value, timeout) {
@@ -419,7 +354,7 @@ export default {
       if (data.in1 != null) {
         this.i1 = data.in1;
         this.addToast({
-          hideInToast: false,
+          hideInToast: false, 
           title: "Entrada",
           body: `Entrada 1 ${data.in1 ? "Desligada" : "Ligada"}`,
           add: new Date().getTime(),
@@ -455,10 +390,6 @@ export default {
       this.loadWifi();
     },
     loadCfg() {
-      // let cfg = localStorage.getItem("cfgESP");
-      // if (cfg) {
-      //   this.config = JSON.parse(cfg);
-      // }
       this.$http(`/config`).then((resp) => {
         if (resp.status == 200) {
           this.config = resp.data;
@@ -466,8 +397,6 @@ export default {
       });
     },
     saveCFG() {
-      // localStorage.setItem("cfgESP", JSON.stringify(this.config));
-      // console.log(JSON.stringify(this.config));
       let formData = new FormData();
       formData.append(`save`, JSON.stringify(this.config));
       this.$http
@@ -487,22 +416,26 @@ export default {
     receiveMsg(value) {
       let rcvData = JSON.parse(value.data);
       if(value.data){
+        console.log(value);
       }
       if (rcvData.chat) {
         this.mensagens += `${rcvData.nickName} > ${rcvData.mensagem}\n`;
+        this.addToast({
+          hideInToast: false,
+          title: "Chat",
+          body: `Mensagem de ${rcvData.nickName}`,
+          add: new Date().getTime(),
+          classTitle: `bg-warning`,
+        });
       }
     },
   },
   mounted() {
-    // this.sseClient = new EventSource("http://192.168.88.31/events");
-    // this.sseClient = new EventSource("http://10.10.10.145/events");
-    this.sseClient = new EventSource(`/events`);
-    this.sseClient.onopen = function () {};
-    this.sseClient.onerror = function () {};
-    this.sseClient.addEventListener("output", this.output, false);
-    this.sseClient.addEventListener("input", this.input, false);
-    this.sseClient.addEventListener("wifi", this.wifiATT, false);
-    this.sseClient.addEventListener("sse", this.receiveMsg, false);
+    sse.start();
+    sse.callback("output", this.output)
+    sse.callback("input", this.input)
+    sse.callback("wifi", this.wifiATT)
+    sse.callback("sse", this.receiveMsg)
     this.loadData();
     document.title = "ESP01 IO";
 
