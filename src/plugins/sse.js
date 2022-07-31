@@ -1,7 +1,15 @@
 let sseClient 
 
+let sseUrl = '/events';
+
+if (process.env.NODE_ENV === 'production') {
+    sseUrl = '/events'
+} else {
+    sseUrl = 'http://192.168.88.27/events'
+}
+
 const start = async ()=>{
-    sseClient = new EventSource("http://192.168.88.31/events");
+    sseClient = new EventSource(sseUrl);
     sseClient.onopen = function (evt) {console.log(evt);};
     sseClient.onerror = function (evt) {console.log(evt);};
 }

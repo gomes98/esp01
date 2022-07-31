@@ -1,8 +1,11 @@
 import Vue from 'vue'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://192.168.88.31'
-// axios.defaults.baseURL = 'http://10.10.10.145'
+if (process.env.NODE_ENV === 'production') {
+    axios.defaults.baseURL = '/'
+} else {
+    axios.defaults.baseURL = 'http://192.168.88.27/'
+}
 
 const success = res => res
 const error = res => res
